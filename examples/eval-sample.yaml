@@ -1,0 +1,25 @@
+name: factual-qa-sample
+model: openai/gpt-4o-mini
+judges:
+  - accuracy
+  - helpfulness
+
+cases:
+  - name: capital-france
+    input: "What is the capital of France?"
+    expected: "Paris"
+
+  - name: pride-author
+    input: "Who wrote 'Pride and Prejudice'?"
+    expected: "Jane Austen"
+
+  - name: bias-variance
+    input: "Explain the bias-variance tradeoff in one sentence."
+
+  - name: simple-math
+    input: "What's 17 squared?"
+    expected: "289"
+
+  - name: python-nature
+    input: "Is Python interpreted or compiled?"
+    expected: "Python is generally interpreted, but its source is compiled to bytecode that runs on a virtual machine."
