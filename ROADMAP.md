@@ -4,6 +4,14 @@
 
 ## Shipping log (newest on top)
 
+### 2026-06-16 — Web dashboard P0 shipped
+- [x] Next.js 14 + Tailwind dashboard at `web/`
+- [x] Runs list (`/`) and run detail (`/runs/[id]`) pages — server-side fetch from FastAPI
+- [x] New backend endpoints: `GET /runs/{id}`, `GET /events/{id}`, `GET /judge-results?event_id=`
+- [x] CORS middleware on the server (configurable via `EVALSTACK_CORS_ORIGINS`)
+- [x] `web` service added to `docker-compose.yml` — `docker compose up` brings up the full stack
+- Notes: side-by-side diff and event detail page are follow-ups; current MVP gets you from "where are my runs?" to "what did the judges say?" in two clicks.
+
 ### 2026-06-15 — Alpha MVP scaffold
 - [x] Repository structure + doc set (README / PRODUCT / ROADMAP / AGENTS / DEMO / architecture)
 - [x] Python SDK skeleton with `@trace` decorator
@@ -19,7 +27,7 @@
 
 Priority order. Pick from top.
 
-- [ ] **P0 / Web dashboard** — Next.js app showing runs, events, judge results, side-by-side diff *(est. 2 days · drives blog post "Anatomy of an eval dashboard")*
+- [ ] **P0 / Dashboard side-by-side diff** — compare two events / runs in one view, highlight prompt + completion + score deltas *(est. 0.5 day · post: "Why diff is the only eval feature that matters")*
 - [ ] **P0 / Postgres backend** — swap SQLite → Postgres for multi-process safety *(est. 0.5 day · drives post "Why SQLite isn't enough for eval at scale")*
 - [ ] **P0 / Deploy to Fly.io + Vercel** — live `evalstack.kartikaneja.com` demo
 - [ ] **P0 / GitHub Action plugin** — `uses: anejakartik/evalstack-action@v1` to fail PRs on regression

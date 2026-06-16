@@ -27,6 +27,7 @@ See [PRODUCT.md](./PRODUCT.md) for the full writeup. TL;DR:
 - **FastAPI server** — receives traces, runs configured judges, stores results in SQLite (Postgres next)
 - **LLM-as-judge** — accuracy + helpfulness rubrics out of the box, fully extensible
 - **CLI** — `evalstack run <eval.yaml>` runs a suite of eval cases and prints a diff
+- **Web dashboard** — Next.js + Tailwind UI for browsing runs, events, and judge scores
 
 ## Try it (60 seconds, local)
 
@@ -35,14 +36,14 @@ git clone https://github.com/anejakartik/evalstack.git
 cd evalstack
 pip install -e ./sdk
 export OPENAI_API_KEY=sk-...
-docker compose up -d server      # starts the eval server on :8000
-python examples/quickstart.py    # runs a sample eval
-open http://localhost:8000/runs  # see results
+docker compose up -d              # starts FastAPI server (:8000) + Next.js dashboard (:3000)
+python examples/quickstart.py     # runs a sample eval
+open http://localhost:3000        # browse runs in the dashboard
 ```
 
 ## Architecture
 
-See [docs/architecture.md](./docs/architecture.md). Stack: Python + FastAPI + SQLite (→ Postgres) + Next.js dashboard (coming), deployed on Fly.io + Vercel.
+See [docs/architecture.md](./docs/architecture.md). Stack: Python + FastAPI + SQLite (→ Postgres) + Next.js dashboard, deployed on Fly.io + Vercel.
 
 ## What's next
 

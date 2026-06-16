@@ -13,6 +13,7 @@ from typing import Any
 from uuid import UUID, uuid4
 
 from fastapi import FastAPI, HTTPException, Query
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from sqlmodel import Field, Session, SQLModel, create_engine, select
 
@@ -90,6 +91,15 @@ app = FastAPI(
     title="evalstack",
     version="0.1.0",
     description="Open-source LLM evaluation server",
+)
+
+_cors_origins = os.environ.get("EVALSTACK_CORS_ORIGINS", "*").split(",")
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=_cors_origins,
+    allow_credentials=False,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 
@@ -188,12 +198,59 @@ def run_judge(req: JudgeRunRequest) -> dict[str, Any]:
 def list_runs(limit: int = Query(default=50, le=500)) -> list[Run]:
     with Session(engine) as session:
         rows = session.exec(select(RunRow).order_by(RunRow.created_at.desc()).limit(limit)).all()
+        return [_row_to_run(r) for r in rows]
+
+
+@app.get("/runs/{run_id}", response_model=Run)
+def get_run(run_id: UUID) -> Run:
+    with Session(engine) as session:
+        row = session.get(RunRow, str(run_id))
+        if row is None:
+            raise HTTPException(404, "Run not found")
+        return _row_to_run(row)
+
+
+@app.get("/events/{event_id}", response_model=Event)
+def get_event(event_id: UUID) -> Event:
+    with Session(engine) as session:
+        row = session.get(EventRow, str(event_id))
+        if row is None:
+            raise HTTPException(404, "Event not found")
+        return _row_to_event(row)
+
+
+@app.get("/judge-results", response_model=list[JudgeResult])
+def list_judge_results(
+    event_id: UUID | None = Query(default=None),
+    limit: int = Query(default=500, le=5000),
+) -> list[JudgeResult]:
+    """Return stored judge results, optionally filtered by event_id."""
+    with Session(engine) as session:
+        stmt = select(JudgeResultRow)
+        if event_id is not None:
+            stmt = stmt.where(JudgeResultRow.event_id == str(event_id))
+        stmt = stmt.order_by(JudgeResultRow.timestamp.desc()).limit(limit)
+        rows = session.exec(stmt).all()
         return [
-            Run(
-                id=UUID(r.id),
-                name=r.name,
-                created_at=r.created_at.replace(tzinfo=timezone.utc) if r.created_at.tzinfo is None else r.created_at,
-                suite_path=r.suite_path,
+            JudgeResult(
+                event_id=UUID(r.event_id),
+                judge_name=r.judge_name,
+                score=r.score,
+                reasoning=r.reasoning,
+                timestamp=r.timestamp.replace(tzinfo=timezone.utc)
+                if r.timestamp.tzinfo is None
+                else r.timestamp,
             )
             for r in rows
         ]
+
+
+def _row_to_run(row: RunRow) -> Run:
+    return Run(
+        id=UUID(row.id),
+        name=row.name,
+        created_at=row.created_at.replace(tzinfo=timezone.utc)
+        if row.created_at.tzinfo is None
+        else row.created_at,
+        suite_path=row.suite_path,
+    )
