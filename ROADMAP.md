@@ -4,6 +4,14 @@
 
 ## Shipping log (newest on top)
 
+### 2026-06-18 — Side-by-side diff page
+- [x] `/compare/[a]/[b]` server route — fetches both events + their judge results in parallel
+- [x] Word-level LCS diff helper (`web/lib/diff.ts`) — pure TS, no deps
+- [x] `DiffPane` component highlights inserts (emerald) and deletes (rose) with +/− counts per pane
+- [x] Judge-scores table on the diff page — A vs B with delta column (+0.12 emerald / −0.08 rose / ±0 muted)
+- [x] `CompareSelector` client component at the bottom of `/runs/[id]` — two dropdowns + "Compare →" button
+- Notes: word-level granularity is the right default for prompts/completions; line/token-level can be added when JSON-output diffs come up.
+
 ### 2026-06-16 — Web dashboard P0 shipped
 - [x] Next.js 14 + Tailwind dashboard at `web/`
 - [x] Runs list (`/`) and run detail (`/runs/[id]`) pages — server-side fetch from FastAPI
@@ -27,7 +35,7 @@
 
 Priority order. Pick from top.
 
-- [ ] **P0 / Dashboard side-by-side diff** — compare two events / runs in one view, highlight prompt + completion + score deltas *(est. 0.5 day · post: "Why diff is the only eval feature that matters")*
+- [ ] **P0 / Run-level diff** — extend the diff page to compare two whole runs (judge means, score histograms, per-case deltas)
 - [ ] **P0 / Postgres backend** — swap SQLite → Postgres for multi-process safety *(est. 0.5 day · drives post "Why SQLite isn't enough for eval at scale")*
 - [ ] **P0 / Deploy to Fly.io + Vercel** — live `evalstack.kartikaneja.com` demo
 - [ ] **P0 / GitHub Action plugin** — `uses: anejakartik/evalstack-action@v1` to fail PRs on regression

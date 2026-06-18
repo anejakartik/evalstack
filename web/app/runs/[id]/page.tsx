@@ -8,6 +8,7 @@ import {
 } from "@/lib/api";
 import { formatTimestamp, shortId } from "@/lib/format";
 import { EventCard } from "@/components/EventCard";
+import { CompareSelector } from "@/components/CompareSelector";
 
 export const dynamic = "force-dynamic";
 
@@ -84,6 +85,14 @@ export default async function RunDetailPage({
           ))
         )}
       </section>
+
+      <CompareSelector
+        events={events.map((ev) => ({
+          id: ev.id,
+          model: ev.model,
+          timestamp: ev.timestamp,
+        }))}
+      />
     </div>
   );
 }

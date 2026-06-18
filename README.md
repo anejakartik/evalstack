@@ -27,7 +27,7 @@ See [PRODUCT.md](./PRODUCT.md) for the full writeup. TL;DR:
 - **FastAPI server** — receives traces, runs configured judges, stores results in SQLite (Postgres next)
 - **LLM-as-judge** — accuracy + helpfulness rubrics out of the box, fully extensible
 - **CLI** — `evalstack run <eval.yaml>` runs a suite of eval cases and prints a diff
-- **Web dashboard** — Next.js + Tailwind UI for browsing runs, events, and judge scores
+- **Web dashboard** — Next.js + Tailwind UI for browsing runs, events, judge scores, and side-by-side event diffs
 
 ## Try it (60 seconds, local)
 
