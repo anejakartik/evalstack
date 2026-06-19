@@ -21,6 +21,24 @@ See [PRODUCT.md](./PRODUCT.md) for the full writeup. TL;DR:
 - **Pain:** No CI for prompts. No regression detection. Excel sheets and Slack screenshots.
 - **Why now:** LLM eval is the #1 underserved 2026 topic. Braintrust raised $36M but is closed + paid.
 
+## Demo
+
+**Runs list** — every eval run reported by the SDK or CLI, with a "Compare two runs" picker at the bottom:
+
+![evalstack — runs list](./docs/screenshots/01-runs-list.png)
+
+**Run-level diff** — judge means with deltas, 10-bucket score histograms per judge (A in zinc, B in indigo), top regressions/improvements panels, and a per-prompt matched table with drill-down to event-level diff:
+
+![evalstack — run-level diff](./docs/screenshots/03-run-diff.png)
+
+**Run detail** — every event in the run with per-event judge scores + reasoning + a compare-events picker at the bottom:
+
+![evalstack — run detail](./docs/screenshots/02-run-detail.png)
+
+**Event-level diff** — word-level LCS diff on prompts + completions plus per-judge A-vs-B deltas:
+
+![evalstack — event-level diff](./docs/screenshots/04-event-diff.png)
+
 ## What works today (alpha MVP)
 
 - **Python SDK** — one decorator (`@evalstack.trace`) captures LLM calls + outputs
