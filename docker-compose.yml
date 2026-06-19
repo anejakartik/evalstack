@@ -4,7 +4,7 @@ services:
       context: .
       dockerfile: server/Dockerfile
     ports:
-      - "8000:8000"
+      - "${EVALSTACK_SERVER_PORT:-8000}:8000"
     environment:
       - EVALSTACK_DB_URL=sqlite:////app/data/evalstack.db
       - EVALSTACK_CORS_ORIGINS=${EVALSTACK_CORS_ORIGINS:-*}
@@ -23,7 +23,7 @@ services:
     build:
       context: ./web
     ports:
-      - "3000:3000"
+      - "${EVALSTACK_WEB_PORT:-3000}:3000"
     environment:
       - EVALSTACK_API_BASE=http://server:8000
     depends_on:

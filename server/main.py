@@ -23,6 +23,7 @@ from evalstack.models import Event, JudgeResult, Run  # noqa: E402
 
 from judges.accuracy import score as score_accuracy
 from judges.helpfulness import score as score_helpfulness
+from judges.length_check import score as score_length_check
 
 
 DATABASE_URL = os.environ.get("EVALSTACK_DB_URL", "sqlite:///./evalstack.db")
@@ -155,7 +156,11 @@ class JudgeRunRequest(BaseModel):
 @app.post("/evals/run")
 def run_judge(req: JudgeRunRequest) -> dict[str, Any]:
     """Run a judge over a set of events. Returns per-event scores + run summary."""
-    judges = {"accuracy": score_accuracy, "helpfulness": score_helpfulness}
+    judges = {
+        "accuracy": score_accuracy,
+        "helpfulness": score_helpfulness,
+        "length_check": score_length_check,
+    }
     if req.judge_name not in judges:
         raise HTTPException(404, f"Unknown judge: {req.judge_name}. Available: {list(judges)}")
 
@@ -192,6 +197,21 @@ def run_judge(req: JudgeRunRequest) -> dict[str, Any]:
         "summary": {"count": len(results), "mean": round(mean, 4)},
         "results": [r.model_dump(mode="json") for r in results],
     }
+
+
+@app.post("/runs", response_model=Run)
+def create_run(run: Run) -> Run:
+    """Register a Run. SDK / CLI calls this before posting events with this run_id."""
+    with Session(engine) as session:
+        row = RunRow(
+            id=str(run.id),
+            name=run.name,
+            created_at=run.created_at,
+            suite_path=run.suite_path,
+        )
+        session.merge(row)  # idempotent on the run id
+        session.commit()
+    return run
 
 
 @app.get("/runs", response_model=list[Run])

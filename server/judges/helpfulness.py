@@ -46,6 +46,14 @@ def score(event: Event) -> JudgeResult:
         Response: {event.completion}
     """).strip()
 
+    if not os.environ.get("OPENAI_API_KEY"):
+        return JudgeResult(
+            event_id=event.id,
+            judge_name="helpfulness",
+            score=0.0,
+            reasoning="skipped: OPENAI_API_KEY not set on the server",
+        )
+
     try:
         resp = _client_lazy().chat.completions.create(
             model=JUDGE_MODEL,
