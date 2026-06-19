@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { listRuns } from "@/lib/api";
 import { formatTimestamp, relativeTime, shortId } from "@/lib/format";
+import { RunCompareSelector } from "@/components/RunCompareSelector";
 
 export const dynamic = "force-dynamic";
 
@@ -73,6 +74,10 @@ export default async function RunsPage() {
           </table>
         </div>
       )}
+
+      <RunCompareSelector
+        runs={runs.map((r) => ({ id: r.id, name: r.name }))}
+      />
     </div>
   );
 }
