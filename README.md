@@ -2,8 +2,8 @@
 
 > Open-source LLM evaluation for teams that don't want to pay $300/month for Braintrust.
 
-**Live demo:** [evalstack.kartikaneja.com](https://evalstack.kartikaneja.com) *(coming soon)*
-**Status:** alpha · last shipped 2026-06-15
+**Live demo:** [evalstack.kartikaneja.com](https://evalstack.kartikaneja.com)
+**Status:** alpha · last shipped 2026-06-22
 **Built by:** [Kartik Aneja](https://kartikaneja.com) — AI/ML Platform Engineer
 
 [![CI](https://github.com/anejakartik/evalstack/actions/workflows/ci.yml/badge.svg)](https://github.com/anejakartik/evalstack/actions/workflows/ci.yml)
